@@ -12,7 +12,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-from Perception_Functions import *
+from ArmPi.Functions.Random.Perception_Functions import *
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')

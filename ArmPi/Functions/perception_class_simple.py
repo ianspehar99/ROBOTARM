@@ -16,8 +16,9 @@ import time
 
 
 class PerceptionClass:
-    def __init__(self, target_color ):
+    def __init__(self):
         # Initialize all variables as instance attributes
+        self.servo1 = 500
         self.roi = ()
         self.rect = None
         self.count = 0
@@ -33,10 +34,9 @@ class PerceptionClass:
         self.start_count_t1 = True
         self.t1 = 0
         self.detect_color = 'None'
-        self.draw_color = self.range_rgb["black"]
         self.color_list = []
         self.size = (640, 480)
-        self.target_color = target_color
+        self.target_color =  ('red', )
         self.range_rgb = {
             'red':   (0, 0, 255),
             'blue':  (255, 0, 0),
@@ -44,6 +44,7 @@ class PerceptionClass:
             'black': (0, 0, 0),
             'white': (255, 255, 255),
         }
+        self.draw_color = self.range_rgb["black"]
 
 
     def run(self, img):
@@ -68,9 +69,9 @@ class PerceptionClass:
         areaMaxContour_max = 0
 
         if not self.start_pick_up:
-            for i in self.color_range:
-                if i in self.__target_color:
-                    frame_mask = cv2.inRange(frame_lab, self.color_range[i][0], color_range[i][1])  # 对原图像和掩模进行位运算
+            for i in color_range:  #From LABconfig
+                if i in self.target_color:
+                    frame_mask = cv2.inRange(frame_lab, color_range[i][0], color_range[i][1])  # 对原图像和掩模进行位运算
                     opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
                     closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # 闭运算
                     contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  # 找出轮廓
@@ -87,9 +88,9 @@ class PerceptionClass:
                 self.roi = getROI(box)  # 获取roi区域
                 self.get_roi = True
 
-                img_centerx, img_centery = getCenter(self.rect, self.roi, size, square_length)  # 获取木块中心坐标
+                img_centerx, img_centery = getCenter(self.rect, self.roi, self.size, square_length)  # 获取木块中心坐标
 
-                self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size)  # 转换为现实世界坐标
+                self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, self.size)  # 转换为现实世界坐标
 
                 if not self.start_pick_up:
                     cv2.drawContours(img, [box], -1, self.range_rgb[color_area_max], 2)

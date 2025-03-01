@@ -292,9 +292,6 @@ t1 = 0
 roi = ()
 last_x, last_y = 0, 0
 
-
- 
-
 if __name__ == '__main__':
     init()
     #start()
